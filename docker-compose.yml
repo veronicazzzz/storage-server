@@ -1,21 +1,40 @@
-version: '3'
+version: '3.9'
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
-      POSTGRES_USER: ${POSTGRES_USER:-symfony}
-    volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+    nginx:
+        build:
+            context: ./docker/nginx
+        restart: on-failure
+        volumes:
+            - '.:/app'
+            - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro'
+        ports:
+            - '8080:80'
+        depends_on:
+            - php
 
-volumes:
-###> doctrine/doctrine-bundle ###
-  db-data:
-###< doctrine/doctrine-bundle ###
+    db:
+        build:
+            context: ./docker/mysql
+        restart: on-failure
+        volumes:
+            - './docker/mysql/conf.d/config.cnf:/etc/mysql/conf.d/config.cnf'
+        environment:
+          - MYSQL_ROOT_PASSWORD=12345
+          - MYSQL_USER=user
+          - MYSQL_PASSWORD=12345
+          - MYSQL_DATABASE=filestorage
+        ports:
+            - '3306:3306'
+
+    php:
+        build:
+            context: ./docker/php
+        volumes:
+            - '.:/app'
+            - './docker/php/conf.d/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
+        working_dir: /app
+        environment:
+            - PHP_IDE_CONFIG=serverName=filestorage.loc
+        depends_on:
+            - db

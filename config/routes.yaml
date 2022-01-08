@@ -1,7 +1,24 @@
-controllers:
-    resource: ../src/Controller/
-    type: annotation
+api_file_create:
+  path: /api/file
+  controller: App\Controller\FileController::createAction
+  methods: POST
 
-kernel:
-    resource: ../src/Kernel.php
-    type: annotation
+api_file_get_info:
+  path: /api/file-info/
+  controller: App\Controller\FileController::getAllInfoAction
+  methods: GET
+
+api_file_get:
+  path: /api/file/{filename}
+  controller: App\Controller\FileController::getFileAction
+  methods: GET
+
+api_file_delete:
+  path: /api/file/{filename}
+  controller: App\Controller\FileController::removeAction
+  methods: DELETE
+
+#api_file_get_info:
+#  path: /api/file-info/{fileName}
+#  controller: App\Controller\FileController::getInfoAction
+#  methods: GET
