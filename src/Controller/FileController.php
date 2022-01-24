@@ -58,14 +58,14 @@ class FileController extends AbstractController
                 $em->flush();
 
                 return new JsonResponse(
-                    [
-                        'code'    => '201',
+                    array(
+                        'code' => '201',
                         'message' => 'File created',
-                        'file'    => [
+                        'file' => array(
                             'fileName' => $fileName,
                             'fileSize' => $fileSize,
-                        ]
-                    ],
+                        )
+                    ),
                     Response::HTTP_CREATED
                 );
             }
@@ -73,10 +73,10 @@ class FileController extends AbstractController
             throw new FileException();
         } catch (FileException $e) {
             return new JsonResponse(
-                [
-                    'code'    => '400',
+                array(
+                    'code' => '400',
                     'message' => $e->getMessage()
-                ],
+                ),
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -92,12 +92,12 @@ class FileController extends AbstractController
         $fileName = $request->get('filename');
 
         $fileRepository = $this->getDoctrine()->getRepository(File::class);
-        $em             = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /** @var File $file */
-        $file = $fileRepository->findOneBy([
+        $file = $fileRepository->findOneBy(array(
             'fileName' => $fileName
-        ]);
+        ));
 
         if ($file) {
             $this->fileService->remove($file->getFileName());
@@ -106,19 +106,19 @@ class FileController extends AbstractController
             $em->flush();
 
             return new JsonResponse(
-                [
-                    'code'    => '204',
+                array(
+                    'code' => '204',
                     'message' => "File $fileName removed"
-                ],
+                ),
                 204
             );
         }
 
         return new JsonResponse(
-            [
-                'code'    => '404',
+            array(
+                'code' => '404',
                 'message' => "File $fileName not found"
-            ],
+            ),
             Response::HTTP_NOT_FOUND
         );
     }
@@ -143,12 +143,12 @@ class FileController extends AbstractController
      */
     public function getFileAction(Request $request): BinaryFileResponse
     {
-        $fileName        = $request->get('filename');
+        $fileName = $request->get('filename');
         $targetDirectory = $this->fileService->getTargetDirectory();
 
         $fileFullPath = $targetDirectory . '/' . $fileName;
 
-        $response        = new BinaryFileResponse($fileFullPath);
+        $response = new BinaryFileResponse($fileFullPath);
         $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
 
         if ($mimeTypeGuesser->isGuesserSupported()) {

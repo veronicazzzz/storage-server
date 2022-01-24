@@ -40,7 +40,7 @@ class FileService
     public function upload(UploadedFile $file): string
     {
         $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $fileName         = $originalFileName . '-' . uniqid() . '.' . $file->guessExtension();
+        $fileName = $originalFileName . '-' . uniqid() . '.' . $file->guessExtension();
 
         $file->move($this->getTargetDirectory(), $fileName);
 
