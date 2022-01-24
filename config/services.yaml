@@ -21,3 +21,7 @@ services:
     App\Service\FileService:
         arguments:
             $targetDirectory: '%files_directory%'
+
+    App\Service\EnvService:
+        arguments:
+            $appEnv: '%env(APP_ENV)%'

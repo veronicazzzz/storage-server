@@ -22,3 +22,8 @@ api_file_delete:
 #  path: /api/file-info/{fileName}
 #  controller: App\Controller\FileController::getInfoAction
 #  methods: GET
+
+health:
+  path: /health
+  controller: App\Controller\HealthController::getAction
+  methods: GET
