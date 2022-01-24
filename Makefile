@@ -28,3 +28,32 @@ cache-prod:
 
 keypair:
 	php bin/console lexik:jwt:generate-keypair
+
+phpstan:
+	vendor/bin/phpstan analyse src
+
+cs:
+	vendor/bin/phpcs src
+
+cbf:
+	vendor/bin/phpcbf src
+
+install-cs-fixer:
+	mkdir --parents tools/php-cs-fixer
+	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
+
+cs-fixer:
+	tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+
+install-phpmd:
+	mkdir --parents tools/phpmd
+	composer require --working-dir=tools/phpmd phpmd/phpmd
+
+phpmd:
+	tools/phpmd/vendor/bin/phpmd src ansi phpmd.xml
+
+ecs:
+	vendor/bin/ecs check src
+
+ecs-fix:
+	vendor/bin/ecs check src --fix
