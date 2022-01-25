@@ -56,4 +56,9 @@ ecs:
 	vendor/bin/ecs check src
 
 ecs-fix:
-	vendor/bin/ecs check src --fix
+	vendor/bin/ecs check src --fix 
+
+hooks:
+	root="$$(pwd)"; \
+    cp -a "$$root/.githooks/." "$$root/.git/hooks"
+	chmod 775 .git/hooks/*

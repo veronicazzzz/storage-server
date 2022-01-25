@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker exec storage-server_php_1 make cbf
